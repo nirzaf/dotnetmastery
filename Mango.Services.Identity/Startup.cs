@@ -49,6 +49,8 @@ namespace Mango.Services.Identity
 
             services.AddScoped<IDbInitializer, DbInitializer>();
             services.AddScoped<IProfileService, ProfileService>();
+
+            //to Add Signin Credentials only for development purpose
             builder.AddDeveloperSigningCredential();
 
             services.AddControllersWithViews();
