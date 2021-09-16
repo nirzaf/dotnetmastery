@@ -33,12 +33,11 @@ namespace Mango.Services.ShoppingCartAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddDbContext<ApplicationDbContext>(options =>
-               options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
 
-            IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
+            var mapper = MappingConfig.RegisterMaps().CreateMapper();
             services.AddSingleton(mapper);
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddScoped<ICartRepository, CartRepository>();
@@ -47,17 +46,15 @@ namespace Mango.Services.ShoppingCartAPI
             services.AddSingleton<IRabbitMQCartMessageSender, RabbitMQCartMessageSender>();
             services.AddControllers();
             services.AddHttpClient<ICouponRepository, CouponRepository>(u => u.BaseAddress =
-              new Uri(Configuration["ServiceUrls:CouponAPI"]));
+                new Uri(Configuration["ServiceUrls:CouponAPI"]));
             services.AddAuthentication("Bearer")
                 .AddJwtBearer("Bearer", options =>
                 {
-
                     options.Authority = "https://localhost:44365/";
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateAudience = false
                     };
-
                 });
 
             services.AddAuthorization(options =>
@@ -82,25 +79,24 @@ namespace Mango.Services.ShoppingCartAPI
                     Scheme = "Bearer"
                 });
 
-                c.AddSecurityRequirement(new OpenApiSecurityRequirement {
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
                     {
                         new OpenApiSecurityScheme
                         {
                             Reference = new OpenApiReference
                             {
-                                Type=ReferenceType.SecurityScheme,
-                                Id="Bearer"
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
                             },
-                            Scheme="oauth2",
-                            Name="Bearer",
-                            In=ParameterLocation.Header
+                            Scheme = "oauth2",
+                            Name = "Bearer",
+                            In = ParameterLocation.Header
                         },
                         new List<string>()
                     }
-
                 });
             });
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -110,7 +106,8 @@ namespace Mango.Services.ShoppingCartAPI
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Mango.Services.ShoppingCartAPI v1"));
+                app.UseSwaggerUI(
+                    c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Mango.Services.ShoppingCartAPI v1"));
             }
 
             app.UseHttpsRedirection();
@@ -119,10 +116,7 @@ namespace Mango.Services.ShoppingCartAPI
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
     }
 }

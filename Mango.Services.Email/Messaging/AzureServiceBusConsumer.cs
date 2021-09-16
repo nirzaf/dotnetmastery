@@ -33,36 +33,36 @@ namespace Mango.Services.Email.Messaging
 
             var client = new ServiceBusClient(serviceBusConnectionString);
 
-            orderUpdatePaymentStatusProcessor = client.CreateProcessor(orderUpdatePaymentResultTopic, subscriptionEmail);
+            orderUpdatePaymentStatusProcessor =
+                client.CreateProcessor(orderUpdatePaymentResultTopic, subscriptionEmail);
         }
 
         public async Task Start()
         {
-          
             orderUpdatePaymentStatusProcessor.ProcessMessageAsync += OnOrderPaymentUpdateReceived;
             orderUpdatePaymentStatusProcessor.ProcessErrorAsync += ErrorHandler;
             await orderUpdatePaymentStatusProcessor.StartProcessingAsync();
         }
+
         public async Task Stop()
         {
-            
             await orderUpdatePaymentStatusProcessor.StopProcessingAsync();
             await orderUpdatePaymentStatusProcessor.DisposeAsync();
         }
-        Task ErrorHandler(ProcessErrorEventArgs args)
+
+        private Task ErrorHandler(ProcessErrorEventArgs args)
         {
             Console.WriteLine(args.Exception.ToString());
             return Task.CompletedTask;
         }
 
-  
 
         private async Task OnOrderPaymentUpdateReceived(ProcessMessageEventArgs args)
         {
             var message = args.Message;
             var body = Encoding.UTF8.GetString(message.Body);
 
-            UpdatePaymentResultMessage objMessage = JsonConvert.DeserializeObject<UpdatePaymentResultMessage>(body);
+            var objMessage = JsonConvert.DeserializeObject<UpdatePaymentResultMessage>(body);
             try
             {
                 await _emailRepo.SendAndLogEmail(objMessage);
@@ -71,7 +71,7 @@ namespace Mango.Services.Email.Messaging
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message.ToString());
-                throw ;
+                throw;
             }
         }
     }

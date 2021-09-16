@@ -11,8 +11,8 @@ namespace Mango.Services.CouponAPI.DbContexts
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
-
         }
+
         public DbSet<Coupon> Coupons { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -32,7 +32,6 @@ namespace Mango.Services.CouponAPI.DbContexts
                 CouponCode = "20OFF",
                 DiscountAmount = 20
             });
-
         }
     }
 }

@@ -20,16 +20,14 @@ namespace Mango.GatewaySolution
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAuthentication("Bearer")
-               .AddJwtBearer("Bearer", options =>
-               {
-
-                   options.Authority = "https://localhost:44365/";
-                   options.TokenValidationParameters = new TokenValidationParameters
-                   {
-                       ValidateAudience = false
-                   };
-
-               });
+                .AddJwtBearer("Bearer", options =>
+                {
+                    options.Authority = "https://localhost:44365/";
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateAudience = false
+                    };
+                });
 
             services.AddOcelot();
         }
@@ -37,10 +35,7 @@ namespace Mango.GatewaySolution
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public async void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
+            if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
 
             await app.UseOcelot();
         }

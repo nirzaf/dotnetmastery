@@ -50,7 +50,7 @@ namespace IdentityServerHost.Quickstart.UI
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             RoleManager<IdentityRole> roleInManager
-            )
+        )
         {
             // if the TestUserStore is not in DI, then we'll just use the global users collection
             // this is where you would plug in your own custom identity management library (e.g. ASP.NET Identity)
@@ -73,10 +73,8 @@ namespace IdentityServerHost.Quickstart.UI
             var vm = await BuildLoginViewModelAsync(returnUrl);
 
             if (vm.IsExternalLoginOnly)
-            {
                 // we only have one option for logging in and it's an external provider
                 return RedirectToAction("Challenge", "External", new { scheme = vm.ExternalLoginScheme, returnUrl });
-            }
 
             return View(vm);
         }
@@ -103,11 +101,9 @@ namespace IdentityServerHost.Quickstart.UI
 
                     // we can trust model.ReturnUrl since GetAuthorizationContextAsync returned non-null
                     if (context.IsNativeClient())
-                    {
                         // The client is native, so this change in how to
                         // return the response is for better UX for the end user.
                         return this.LoadingPage("Redirect", model.ReturnUrl);
-                    }
 
                     return Redirect(model.ReturnUrl);
                 }
@@ -120,35 +116,28 @@ namespace IdentityServerHost.Quickstart.UI
 
             if (ModelState.IsValid)
             {
-
-                var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberLogin, lockoutOnFailure: false);
+                var result =
+                    await _signInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberLogin,
+                        false);
                 if (result.Succeeded)
                 {
                     var user = await _userManager.FindByNameAsync(model.Username);
                     await _events.RaiseAsync(
                         new UserLoginSuccessEvent(user.UserName, user.Id, user.UserName,
-                        clientId: context?.Client.ClientId));
+                            clientId: context?.Client.ClientId));
 
-                    if (context != null)
-                    {
-                        return Redirect(model.ReturnUrl);
-                    }
+                    if (context != null) return Redirect(model.ReturnUrl);
 
                     if (Url.IsLocalUrl(model.ReturnUrl))
-                    {
                         return Redirect(model.ReturnUrl);
-                    }
                     else if (string.IsNullOrEmpty(model.ReturnUrl))
-                    {
                         return Redirect("~/");
-                    }
                     else
-                    {
                         throw new Exception("invalid return url");
-                    }
                 }
-               
-                await _events.RaiseAsync(new UserLoginFailureEvent(model.Username, "invalid credentials", clientId:context?.Client.ClientId));
+
+                await _events.RaiseAsync(new UserLoginFailureEvent(model.Username, "invalid credentials",
+                    clientId: context?.Client.ClientId));
                 ModelState.AddModelError(string.Empty, AccountOptions.InvalidCredentialsErrorMessage);
             }
 
@@ -157,7 +146,7 @@ namespace IdentityServerHost.Quickstart.UI
             return View(vm);
         }
 
-        
+
         /// <summary>
         /// Show logout page
         /// </summary>
@@ -168,11 +157,9 @@ namespace IdentityServerHost.Quickstart.UI
             var vm = await BuildLogoutViewModelAsync(logoutId);
 
             if (vm.ShowLogoutPrompt == false)
-            {
                 // if the request for logout was properly authenticated from IdentityServer, then
                 // we don't need to show the prompt and can just log the user out directly.
                 return await Logout(vm);
-            }
 
             return View(vm);
         }
@@ -202,7 +189,7 @@ namespace IdentityServerHost.Quickstart.UI
                 // build a return URL so the upstream provider will redirect back
                 // to us after the user has logged out. this allows us to then
                 // complete our single sign-out processing.
-                string url = Url.Action("Logout", new { logoutId = vm.LogoutId });
+                var url = Url.Action("Logout", new { logoutId = vm.LogoutId });
 
                 // this triggers a redirect to the external provider for sign-out
                 return SignOut(new AuthenticationProperties { RedirectUri = url }, vm.ExternalAuthenticationScheme);
@@ -226,7 +213,7 @@ namespace IdentityServerHost.Quickstart.UI
             return View(vm);
         }
 
-       
+
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -235,7 +222,6 @@ namespace IdentityServerHost.Quickstart.UI
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
-
                 var user = new ApplicationUser
                 {
                     UserName = model.Username,
@@ -253,37 +239,38 @@ namespace IdentityServerHost.Quickstart.UI
                         var userRole = new IdentityRole
                         {
                             Name = model.RoleName,
-                            NormalizedName = model.RoleName,
-
+                            NormalizedName = model.RoleName
                         };
                         await _roleManager.CreateAsync(userRole);
                     }
 
                     await _userManager.AddToRoleAsync(user, model.RoleName);
 
-                    await _userManager.AddClaimsAsync(user, new Claim[]{
-                            new Claim(JwtClaimTypes.Name, model.Username),
-                            new Claim(JwtClaimTypes.Email, model.Email),
-                            new Claim(JwtClaimTypes.FamilyName, model.FirstName),
-                            new Claim(JwtClaimTypes.GivenName, model.LastName),
-                            new Claim(JwtClaimTypes.WebSite, "http://"+model.Username+".com"),
-                            new Claim(JwtClaimTypes.Role,"User") });
+                    await _userManager.AddClaimsAsync(user, new Claim[]
+                    {
+                        new(JwtClaimTypes.Name, model.Username),
+                        new(JwtClaimTypes.Email, model.Email),
+                        new(JwtClaimTypes.FamilyName, model.FirstName),
+                        new(JwtClaimTypes.GivenName, model.LastName),
+                        new(JwtClaimTypes.WebSite, "http://" + model.Username + ".com"),
+                        new(JwtClaimTypes.Role, "User")
+                    });
 
                     var context = await _interaction.GetAuthorizationContextAsync(model.ReturnUrl);
-                    var loginresult = await _signInManager.PasswordSignInAsync(model.Username, model.Password, false, lockoutOnFailure: true);
+                    var loginresult =
+                        await _signInManager.PasswordSignInAsync(model.Username, model.Password, false, true);
                     if (loginresult.Succeeded)
                     {
                         var checkuser = await _userManager.FindByNameAsync(model.Username);
-                        await _events.RaiseAsync(new UserLoginSuccessEvent(checkuser.UserName, checkuser.Id, checkuser.UserName, clientId: context?.Client.ClientId));
+                        await _events.RaiseAsync(new UserLoginSuccessEvent(checkuser.UserName, checkuser.Id,
+                            checkuser.UserName, clientId: context?.Client.ClientId));
 
                         if (context != null)
                         {
                             if (context.IsNativeClient())
-                            {
                                 // The client is native, so this change in how to
                                 // return the response is for better UX for the end user.
                                 return this.LoadingPage("Redirect", model.ReturnUrl);
-                            }
 
                             // we can trust model.ReturnUrl since GetAuthorizationContextAsync returned non-null
                             return Redirect(model.ReturnUrl);
@@ -291,49 +278,41 @@ namespace IdentityServerHost.Quickstart.UI
 
                         // request for a local page
                         if (Url.IsLocalUrl(model.ReturnUrl))
-                        {
                             return Redirect(model.ReturnUrl);
-                        }
                         else if (string.IsNullOrEmpty(model.ReturnUrl))
-                        {
                             return Redirect("~/");
-                        }
                         else
-                        {
                             // user might have clicked on a malicious link - should be logged
                             throw new Exception("invalid return URL");
-                        }
                     }
-
                 }
             }
 
             // If we got this far, something failed, redisplay form
             return View(model);
         }
+
         private async Task<RegisterViewModel> BuildRegisterViewModelAsync(string returnUrl)
         {
             var context = await _interaction.GetAuthorizationContextAsync(returnUrl);
-            List<string> roles = new List<string>();
+            var roles = new List<string>();
             roles.Add("Admin");
             roles.Add("Customer");
             ViewBag.message = roles;
             if (context?.IdP != null && await _schemeProvider.GetSchemeAsync(context.IdP) != null)
             {
-                var local = context.IdP == Duende.IdentityServer.IdentityServerConstants.LocalIdentityProvider;
+                var local = context.IdP == IdentityServerConstants.LocalIdentityProvider;
 
                 // this is meant to short circuit the UI and only trigger the one external IdP
                 var vm = new RegisterViewModel
                 {
                     EnableLocalLogin = local,
                     ReturnUrl = returnUrl,
-                    Username = context?.LoginHint,
+                    Username = context?.LoginHint
                 };
 
                 if (!local)
-                {
                     vm.ExternalProviders = new[] { new ExternalProvider { AuthenticationScheme = context.IdP } };
-                }
 
                 return vm;
             }
@@ -357,9 +336,8 @@ namespace IdentityServerHost.Quickstart.UI
                     allowLocal = client.EnableLocalLogin;
 
                     if (client.IdentityProviderRestrictions != null && client.IdentityProviderRestrictions.Any())
-                    {
-                        providers = providers.Where(provider => client.IdentityProviderRestrictions.Contains(provider.AuthenticationScheme)).ToList();
-                    }
+                        providers = providers.Where(provider =>
+                            client.IdentityProviderRestrictions.Contains(provider.AuthenticationScheme)).ToList();
                 }
             }
 
@@ -372,6 +350,7 @@ namespace IdentityServerHost.Quickstart.UI
                 ExternalProviders = providers.ToArray()
             };
         }
+
         /*****************************************/
         /* helper APIs for the AccountController */
         /*****************************************/
@@ -380,20 +359,18 @@ namespace IdentityServerHost.Quickstart.UI
             var context = await _interaction.GetAuthorizationContextAsync(returnUrl);
             if (context?.IdP != null && await _schemeProvider.GetSchemeAsync(context.IdP) != null)
             {
-                var local = context.IdP == Duende.IdentityServer.IdentityServerConstants.LocalIdentityProvider;
+                var local = context.IdP == IdentityServerConstants.LocalIdentityProvider;
 
                 // this is meant to short circuit the UI and only trigger the one external IdP
                 var vm = new LoginViewModel
                 {
                     EnableLocalLogin = local,
                     ReturnUrl = returnUrl,
-                    Username = context?.LoginHint,
+                    Username = context?.LoginHint
                 };
 
                 if (!local)
-                {
                     vm.ExternalProviders = new[] { new ExternalProvider { AuthenticationScheme = context.IdP } };
-                }
 
                 return vm;
             }
@@ -417,9 +394,8 @@ namespace IdentityServerHost.Quickstart.UI
                     allowLocal = client.EnableLocalLogin;
 
                     if (client.IdentityProviderRestrictions != null && client.IdentityProviderRestrictions.Any())
-                    {
-                        providers = providers.Where(provider => client.IdentityProviderRestrictions.Contains(provider.AuthenticationScheme)).ToList();
-                    }
+                        providers = providers.Where(provider =>
+                            client.IdentityProviderRestrictions.Contains(provider.AuthenticationScheme)).ToList();
                 }
             }
 
@@ -482,18 +458,16 @@ namespace IdentityServerHost.Quickstart.UI
             if (User?.Identity.IsAuthenticated == true)
             {
                 var idp = User.FindFirst(JwtClaimTypes.IdentityProvider)?.Value;
-                if (idp != null && idp != Duende.IdentityServer.IdentityServerConstants.LocalIdentityProvider)
+                if (idp != null && idp != IdentityServerConstants.LocalIdentityProvider)
                 {
                     var providerSupportsSignout = await HttpContext.GetSchemeSupportsSignOutAsync(idp);
                     if (providerSupportsSignout)
                     {
                         if (vm.LogoutId == null)
-                        {
                             // if there's no current logout context, we need to create one
                             // this captures necessary info from the current logged in user
                             // before we signout and redirect away to the external IdP for signout
                             vm.LogoutId = await _interaction.CreateLogoutContextAsync();
-                        }
 
                         vm.ExternalAuthenticationScheme = idp;
                     }

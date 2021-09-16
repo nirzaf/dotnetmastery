@@ -1,5 +1,4 @@
-﻿
-using Azure.Messaging.ServiceBus;
+﻿using Azure.Messaging.ServiceBus;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -13,17 +12,17 @@ namespace Mango.MessageBus
     public class AzureServiceBusMessageBus : IMessageBus
     {
         //can be improved
-        private string connectionString = "Endpoint=sb://mangodotnetmaster.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=eHe5kUcrz43uS2ZZwSPvz/6khx9yuJ1c8dW5xn7FNOY=";
+        private string connectionString =
+            "Endpoint=sb://mangodotnetmaster.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=eHe5kUcrz43uS2ZZwSPvz/6khx9yuJ1c8dW5xn7FNOY=";
 
         public async Task PublishMessage(BaseMessage message, string topicName)
         {
-
             await using var client = new ServiceBusClient(connectionString);
 
-            ServiceBusSender sender = client.CreateSender(topicName);
+            var sender = client.CreateSender(topicName);
 
             var jsonMessage = JsonConvert.SerializeObject(message);
-            ServiceBusMessage finalMessage = new ServiceBusMessage(Encoding.UTF8.GetBytes(jsonMessage))
+            var finalMessage = new ServiceBusMessage(Encoding.UTF8.GetBytes(jsonMessage))
             {
                 CorrelationId = Guid.NewGuid().ToString()
             };

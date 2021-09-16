@@ -16,6 +16,5 @@ namespace Mango.Web.Services.IServices
         Task<T> RemoveCoupon<T>(string userId, string token = null);
 
         Task<T> Checkout<T>(CartHeaderDto cartHeader, string token = null);
-
     }
 }

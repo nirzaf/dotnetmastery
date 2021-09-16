@@ -52,10 +52,7 @@ namespace Mango.Services.PaymentAPI
 
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
             app.UseAzureServiceBusConsumer();
         }
     }

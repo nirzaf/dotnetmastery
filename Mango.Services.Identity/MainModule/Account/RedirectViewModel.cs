@@ -2,7 +2,6 @@
 // See LICENSE in the project root for license information.
 
 
-
 namespace IdentityServerHost.Quickstart.UI
 {
     public class RedirectViewModel

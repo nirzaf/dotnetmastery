@@ -33,7 +33,7 @@ namespace Mango.Services.Email
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
-              options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
 
             //IMapper mapper = MappingConfig.RegisterMaps().CreateMapper();
@@ -67,10 +67,7 @@ namespace Mango.Services.Email
 
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
             app.UseAzureServiceBusConsumer();
         }
     }

@@ -36,16 +36,16 @@ namespace Mango.Services.Identity
                 .AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
 
             var builder = services.AddIdentityServer(options =>
-            {
-                options.Events.RaiseErrorEvents = true;
-                options.Events.RaiseInformationEvents = true;
-                options.Events.RaiseFailureEvents = true;
-                options.Events.RaiseSuccessEvents = true;
-                options.EmitStaticAudienceClaim = true;
-            }).AddInMemoryIdentityResources(SD.IdentityResources)
-            .AddInMemoryApiScopes(SD.ApiScopes)
-            .AddInMemoryClients(SD.Clients)
-            .AddAspNetIdentity<ApplicationUser>();
+                {
+                    options.Events.RaiseErrorEvents = true;
+                    options.Events.RaiseInformationEvents = true;
+                    options.Events.RaiseFailureEvents = true;
+                    options.Events.RaiseSuccessEvents = true;
+                    options.EmitStaticAudienceClaim = true;
+                }).AddInMemoryIdentityResources(SD.IdentityResources)
+                .AddInMemoryApiScopes(SD.ApiScopes)
+                .AddInMemoryClients(SD.Clients)
+                .AddAspNetIdentity<ApplicationUser>();
 
             services.AddScoped<IDbInitializer, DbInitializer>();
             services.AddScoped<IProfileService, ProfileService>();
@@ -67,6 +67,7 @@ namespace Mango.Services.Identity
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
@@ -77,8 +78,8 @@ namespace Mango.Services.Identity
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    "default",
+                    "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }

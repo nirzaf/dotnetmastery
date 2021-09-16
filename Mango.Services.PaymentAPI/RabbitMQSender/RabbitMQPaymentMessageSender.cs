@@ -29,7 +29,7 @@ namespace Mango.Services.PaymentAPI.RabbitMQSender
             if (ConnectionExists())
             {
                 using var channel = _connection.CreateModel();
-                channel.ExchangeDeclare(ExchangeName, ExchangeType.Direct, durable: false);
+                channel.ExchangeDeclare(ExchangeName, ExchangeType.Direct, false);
                 channel.QueueDeclare(PaymentOrderUpdateQueueName, false, false, false, null);
                 channel.QueueDeclare(PaymentEmailUpdateQueueName, false, false, false, null);
 
@@ -38,8 +38,8 @@ namespace Mango.Services.PaymentAPI.RabbitMQSender
 
                 var json = JsonConvert.SerializeObject(message);
                 var body = Encoding.UTF8.GetBytes(json);
-                channel.BasicPublish(exchange: ExchangeName, "PaymentEmail" , basicProperties: null, body: body);
-                channel.BasicPublish(exchange: ExchangeName, "PaymentOrder", basicProperties: null, body: body);
+                channel.BasicPublish(ExchangeName, "PaymentEmail", null, body);
+                channel.BasicPublish(ExchangeName, "PaymentOrder", null, body);
             }
         }
 
@@ -64,10 +64,7 @@ namespace Mango.Services.PaymentAPI.RabbitMQSender
 
         private bool ConnectionExists()
         {
-            if (_connection != null)
-            {
-                return true;
-            }
+            if (_connection != null) return true;
             CreateConnection();
             return _connection != null;
         }

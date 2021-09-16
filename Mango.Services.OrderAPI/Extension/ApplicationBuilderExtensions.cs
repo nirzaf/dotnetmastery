@@ -12,8 +12,8 @@ namespace Mango.Services.OrderAPI.Extension
 {
     public static class ApplicationBuilderExtensions
     {
-
         public static IAzureServiceBusConsumer ServiceBusConsumer { get; set; }
+
         public static IApplicationBuilder UseAzureServiceBusConsumer(this IApplicationBuilder app)
         {
             ServiceBusConsumer = app.ApplicationServices.GetService<IAzureServiceBusConsumer>();
@@ -23,6 +23,7 @@ namespace Mango.Services.OrderAPI.Extension
             hostApplicationLife.ApplicationStopped.Register(OnStop);
             return app;
         }
+
         private static void OnStart()
         {
             ServiceBusConsumer.Start();

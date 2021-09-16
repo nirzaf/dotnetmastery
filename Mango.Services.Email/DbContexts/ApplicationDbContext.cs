@@ -11,9 +11,8 @@ namespace Mango.Services.Email.DbContexts
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
-
         }
-        public DbSet<EmailLog> EmailLogs{ get; set; }
 
+        public DbSet<EmailLog> EmailLogs { get; set; }
     }
 }

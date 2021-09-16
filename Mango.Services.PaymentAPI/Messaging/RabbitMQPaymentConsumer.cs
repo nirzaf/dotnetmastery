@@ -14,7 +14,6 @@ namespace Mango.Services.PaymentAPI.Messaging
 {
     public class RabbitMQPaymentConsumer : BackgroundService
     {
-        
         private IConnection _connection;
         private IModel _channel;
         private readonly IRabbitMQPaymentMessageSender _rabbitMQPaymentMessageSender;
@@ -34,8 +33,9 @@ namespace Mango.Services.PaymentAPI.Messaging
 
             _connection = factory.CreateConnection();
             _channel = _connection.CreateModel();
-            _channel.QueueDeclare(queue: "orderpaymentprocesstopic", false, false, false, arguments: null);
+            _channel.QueueDeclare("orderpaymentprocesstopic", false, false, false, null);
         }
+
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
             stoppingToken.ThrowIfCancellationRequested();
@@ -44,7 +44,7 @@ namespace Mango.Services.PaymentAPI.Messaging
             consumer.Received += (ch, ea) =>
             {
                 var content = Encoding.UTF8.GetString(ea.Body.ToArray());
-                PaymentRequestMessage paymentRequestMessage = JsonConvert.DeserializeObject<PaymentRequestMessage>(content);
+                var paymentRequestMessage = JsonConvert.DeserializeObject<PaymentRequestMessage>(content);
                 HandleMessage(paymentRequestMessage).GetAwaiter().GetResult();
 
                 _channel.BasicAck(ea.DeliveryTag, false);
@@ -69,8 +69,8 @@ namespace Mango.Services.PaymentAPI.Messaging
             try
             {
                 _rabbitMQPaymentMessageSender.SendMessage(updatePaymentResultMessage);
-               // await _messageBus.PublishMessage(updatePaymentResultMessage, orderupdatepaymentresulttopic);
-               // await args.CompleteMessageAsync(args.Message);
+                // await _messageBus.PublishMessage(updatePaymentResultMessage, orderupdatepaymentresulttopic);
+                // await args.CompleteMessageAsync(args.Message);
             }
             catch (Exception ex)
             {
@@ -78,8 +78,8 @@ namespace Mango.Services.PaymentAPI.Messaging
                 throw;
             }
             finally
-            { 
-               await Task.CompletedTask;    
+            {
+                await Task.CompletedTask;
             }
         }
     }

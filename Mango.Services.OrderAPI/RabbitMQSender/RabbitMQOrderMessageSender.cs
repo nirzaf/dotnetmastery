@@ -28,10 +28,10 @@ namespace Mango.Services.OrderAPI.RabbitMQSender
             if (ConnectionExists())
             {
                 using var channel = _connection.CreateModel();
-                channel.QueueDeclare(queue: queueName, false, false, false, arguments: null);
+                channel.QueueDeclare(queueName, false, false, false, null);
                 var json = JsonConvert.SerializeObject(message);
                 var body = Encoding.UTF8.GetBytes(json);
-                channel.BasicPublish(exchange: "", routingKey: queueName, basicProperties: null, body: body);
+                channel.BasicPublish("", queueName, null, body);
             }
         }
 
@@ -55,10 +55,7 @@ namespace Mango.Services.OrderAPI.RabbitMQSender
 
         private bool ConnectionExists()
         {
-            if (_connection != null)
-            {
-                return true;
-            }
+            if (_connection != null) return true;
             CreateConnection();
             return _connection != null;
         }

@@ -22,7 +22,8 @@ namespace Mango.Services.OrderAPI.Messaging
         private IModel _channel;
         private readonly IRabbitMQOrderMessageSender _rabbitMQOrderMessageSender;
 
-        public RabbitMQCheckoutConsumer(OrderRepository orderRepository, IRabbitMQOrderMessageSender rabbitMQOrderMessageSender)
+        public RabbitMQCheckoutConsumer(OrderRepository orderRepository,
+            IRabbitMQOrderMessageSender rabbitMQOrderMessageSender)
         {
             _orderRepository = orderRepository;
             _rabbitMQOrderMessageSender = rabbitMQOrderMessageSender;
@@ -35,8 +36,9 @@ namespace Mango.Services.OrderAPI.Messaging
 
             _connection = factory.CreateConnection();
             _channel = _connection.CreateModel();
-            _channel.QueueDeclare(queue: "checkoutqueue", false, false, false, arguments: null);
+            _channel.QueueDeclare("checkoutqueue", false, false, false, null);
         }
+
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
             stoppingToken.ThrowIfCancellationRequested();
@@ -45,7 +47,7 @@ namespace Mango.Services.OrderAPI.Messaging
             consumer.Received += (ch, ea) =>
             {
                 var content = Encoding.UTF8.GetString(ea.Body.ToArray());
-                CheckoutHeaderDto checkoutHeaderDto = JsonConvert.DeserializeObject<CheckoutHeaderDto>(content);
+                var checkoutHeaderDto = JsonConvert.DeserializeObject<CheckoutHeaderDto>(content);
                 HandleMessage(checkoutHeaderDto).GetAwaiter().GetResult();
 
                 _channel.BasicAck(ea.DeliveryTag, false);

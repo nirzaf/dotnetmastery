@@ -18,7 +18,7 @@ namespace Mango.Services.CouponAPI.Controllers
         public CouponAPIController(ICouponRepository couponRepository)
         {
             _couponRepository = couponRepository;
-            this._response = new ResponseDto();
+            _response = new ResponseDto();
         }
 
         [HttpGet("{code}")]
@@ -34,6 +34,7 @@ namespace Mango.Services.CouponAPI.Controllers
                 _response.IsSuccess = false;
                 _response.ErrorMessages = new List<string>() { ex.ToString() };
             }
+
             return _response;
         }
     }

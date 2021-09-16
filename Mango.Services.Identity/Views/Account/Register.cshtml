@@ -6,7 +6,7 @@
         <p>Choose how to register</p>
     </div>
 
-    <partial name="_ValidationSummary" />
+    <partial name="_ValidationSummary"/>
 
     <div class="row">
 
@@ -18,7 +18,7 @@
 
                 <div class="card-body">
                     <form asp-route="Login">
-                        <input type="hidden" asp-for="ReturnUrl" />
+                        <input type="hidden" asp-for="ReturnUrl"/>
 
                         <div class="form-group">
                             <label asp-for="Username"></label>
@@ -49,7 +49,7 @@
                     </form>
                 </div>
                 <div class="card-footer">
-                    <a href="@Url.Action("Login",new {Model.ReturnUrl })">Login</a>
+                    <a href="@Url.Action("Login", new { Model.ReturnUrl })">Login</a>
                 </div>
             </div>
         </div>

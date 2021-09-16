@@ -21,7 +21,7 @@ namespace Mango.Services.Email.Repository
         public async Task SendAndLogEmail(UpdatePaymentResultMessage message)
         {
             //implement an email sender or call some other class library
-            EmailLog emailLog = new EmailLog()
+            var emailLog = new EmailLog()
             {
                 Email = message.Email,
                 EmailSent = DateTime.Now,

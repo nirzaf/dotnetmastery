@@ -1,6 +1,7 @@
 ﻿@model Mango.Web.Models.CartDto
 
-@if (TempData["Error"] != null) { 
+@if (TempData["Error"] != null)
+{
     <div class="alert alert-warning" role="alert">@TempData["Error"]</div>
 }
 
@@ -9,14 +10,14 @@
 {
     <form method="post">
 
-         <input asp-for="CartHeader.UserId" hidden />
-         <input asp-for="CartHeader.CartHeaderId" hidden />
-        <input asp-for="CartHeader.CouponCode" hidden />
-        <input asp-for="CartHeader.DiscountTotal" hidden />
-        <input asp-for="CartHeader.OrderTotal" hidden />
+        <input asp-for="CartHeader.UserId" hidden/>
+        <input asp-for="CartHeader.CartHeaderId" hidden/>
+        <input asp-for="CartHeader.CouponCode" hidden/>
+        <input asp-for="CartHeader.DiscountTotal" hidden/>
+        <input asp-for="CartHeader.OrderTotal" hidden/>
         <div>
-            <span style="font-size:25px;" class="text-warning">Enter details and place order :</span>
-            <br />
+            <span style="font-size: 25px;" class="text-warning">Enter details and place order :</span>
+            <br/>
         </div>
         <div class="border mt-2">
             <div class="container row">
@@ -24,19 +25,19 @@
                     <div class="row">
                         <div class="col-12">
                             <label class="col-form-label">First Name :</label>
-                            <input asp-for="CartHeader.FirstName" class="form-control" />
+                            <input asp-for="CartHeader.FirstName" class="form-control"/>
                         </div>
                         <div class="col-12">
                             <label class="col-form-label">Last Name :</label>
-                            <input asp-for="CartHeader.LastName" class="form-control" />
+                            <input asp-for="CartHeader.LastName" class="form-control"/>
                         </div>
                         <div class="col-12">
                             <label class="col-form-label">Email :</label>
-                            <input asp-for="CartHeader.Email" class="form-control" />
+                            <input asp-for="CartHeader.Email" class="form-control"/>
                         </div>
                         <div class="col-12">
                             <label class="col-form-label">Phone :</label>
-                            <input asp-for="CartHeader.Phone" class="form-control" />
+                            <input asp-for="CartHeader.Phone" class="form-control"/>
                         </div>
                         <div class="col-12">
                             <label class="col-form-label">PickUp Time</label>
@@ -44,17 +45,17 @@
                         </div>
                         <div class="col-12">
                             <label class="col-form-label">Card Number :</label>
-                            <input  asp-for="CartHeader.CardNumber" class="form-control" />
+                            <input asp-for="CartHeader.CardNumber" class="form-control"/>
                         </div>
 
                         <div class="col-12">
                             <label class="col-form-label">CVV :</label>
-                            <input  asp-for="CartHeader.CVV" class="form-control" />
+                            <input asp-for="CartHeader.CVV" class="form-control"/>
                         </div>
 
                         <div class="col-12 pb-4">
                             <label class="col-form-label">Expiry :</label>
-                            <input  asp-for="CartHeader.ExpiryMonthYear"  placeholder="MMYY" class="form-control" />
+                            <input asp-for="CartHeader.ExpiryMonthYear" placeholder="MMYY" class="form-control"/>
                         </div>
                     </div>
                 </div>
@@ -62,7 +63,7 @@
                     <div class="card mt-4">
                         <div class="card-body">
                             <div class=" d-none d-lg-block">
-                                <div class="row text-danger" >
+                                <div class="row text-danger">
                                     <div class="col-6">
                                         Product Details
                                     </div>
@@ -76,31 +77,31 @@
                                 </div>
                             </div>
 
-                            <hr />
+                            <hr/>
 
-                            @foreach(var cartObj in Model.CartDetails){
+                            @foreach (var cartObj in Model.CartDetails)
+                            {
+                                <div class="row h-100">
+                                    <div class="col-6">
+                                        <span style="font-size: 20px">@cartObj.Product.Name</span>
+                                    </div>
 
-                            <div class="row h-100">
-                                <div class="col-6">
-                                    <span style="font-size:20px">@cartObj.Product.Name</span>
+                                    <div class="col-3" style="font-size: 11px;">
+                                        <span style="font-size: 17px;"> $@cartObj.Product.Price</span>
+
+                                    </div>
+                                    <div class="col-3" style="font-size: 11px;">
+                                        <span style="font-size: 17px;"> @cartObj.Count</span>
+                                    </div>
                                 </div>
-
-                                <div class="col-3" style="font-size:11px;">
-                                    <span style="font-size:17px;"> $@cartObj.Product.Price</span>
-
-                                </div>
-                                <div class="col-3" style="font-size:11px;">
-                                    <span style="font-size:17px;"> @cartObj.Count</span>
-                                </div>
-                            </div>
-                            <hr />
+                                <hr/>
                             }
                             <div class="row">
                                 <div class="col-12 text-right pr-4 text-danger">
-                                    Order Total :  @string.Format("{0:c}", Model.CartHeader.OrderTotal) <br />
+                                    Order Total : @string.Format("{0:c}", Model.CartHeader.OrderTotal) <br/>
                                     @if (Model.CartHeader.DiscountTotal > 0)
                                     {
-                                        <span class="text-success"> Order Discount :  @string.Format("{0:c}", Model.CartHeader.DiscountTotal)</span>
+                                        <span class="text-success"> Order Discount : @string.Format("{0:c}", Model.CartHeader.DiscountTotal)</span>
                                     }
                                 </div>
                             </div>
@@ -125,9 +126,9 @@
 
 @section Scripts{
     <script type="text/javascript">
-        $(document).ready(function(){
-           $(".form_datetime").datetimepicker({ format: 'yyyy-mm-dd hh:ii'});
-           $('.form_datetime').datetimepicker('setStartDate', new Date());
+        $(document).ready(function() {
+            $(".form_datetime").datetimepicker({ format: 'yyyy-mm-dd hh:ii' });
+            $('.form_datetime').datetimepicker('setStartDate', new Date());
         });
     </script>
 }

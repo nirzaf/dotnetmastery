@@ -40,20 +40,19 @@ namespace Mango.Services.ShoppingCartAPI.Repository
                 _db.CartHeaders.Remove(cartHeaderFromDb);
                 await _db.SaveChangesAsync();
                 return true;
-
             }
+
             return false;
         }
 
         public async Task<CartDto> CreateUpdateCart(CartDto cartDto)
         {
-
-            Cart cart = _mapper.Map<Cart>(cartDto);
+            var cart = _mapper.Map<Cart>(cartDto);
 
             //check if product exists in database, if not create it!
             var prodInDb = await _db.Products
                 .FirstOrDefaultAsync(u => u.ProductId == cartDto.CartDetails.FirstOrDefault()
-                .ProductId);
+                    .ProductId);
             if (prodInDb == null)
             {
                 _db.Products.Add(cart.CartDetails.FirstOrDefault().Product);
@@ -81,7 +80,7 @@ namespace Mango.Services.ShoppingCartAPI.Repository
                 //check if details has same product
                 var cartDetailsFromDb = await _db.CartDetails.AsNoTracking().FirstOrDefaultAsync(
                     u => u.ProductId == cart.CartDetails.FirstOrDefault().ProductId &&
-                    u.CartHeaderId == cartHeaderFromDb.CartHeaderId);
+                         u.CartHeaderId == cartHeaderFromDb.CartHeaderId);
 
                 if (cartDetailsFromDb == null)
                 {
@@ -104,7 +103,6 @@ namespace Mango.Services.ShoppingCartAPI.Repository
             }
 
             return _mapper.Map<CartDto>(cart);
-
         }
 
         public async Task<CartDto> GetCartByUserId(string userId)
@@ -115,7 +113,7 @@ namespace Mango.Services.ShoppingCartAPI.Repository
             };
 
             cart.CartDetails = _db.CartDetails
-                .Where(u => u.CartHeaderId == cart.CartHeader.CartHeaderId).Include(u=>u.Product);
+                .Where(u => u.CartHeaderId == cart.CartHeader.CartHeaderId).Include(u => u.Product);
 
             return _mapper.Map<CartDto>(cart);
         }
@@ -133,10 +131,10 @@ namespace Mango.Services.ShoppingCartAPI.Repository
         {
             try
             {
-                CartDetails cartDetails = await _db.CartDetails
+                var cartDetails = await _db.CartDetails
                     .FirstOrDefaultAsync(u => u.CartDetailsId == cartDetailsId);
 
-                int totalCountOfCartItems = _db.CartDetails
+                var totalCountOfCartItems = _db.CartDetails
                     .Where(u => u.CartHeaderId == cartDetails.CartHeaderId).Count();
 
                 _db.CartDetails.Remove(cartDetails);
@@ -147,10 +145,11 @@ namespace Mango.Services.ShoppingCartAPI.Repository
 
                     _db.CartHeaders.Remove(cartHeaderToRemove);
                 }
+
                 await _db.SaveChangesAsync();
                 return true;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return false;
             }

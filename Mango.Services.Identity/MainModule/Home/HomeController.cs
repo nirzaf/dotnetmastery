@@ -20,7 +20,8 @@ namespace IdentityServerHost.Quickstart.UI
         private readonly IWebHostEnvironment _environment;
         private readonly ILogger _logger;
 
-        public HomeController(IIdentityServerInteractionService interaction, IWebHostEnvironment environment, ILogger<HomeController> logger)
+        public HomeController(IIdentityServerInteractionService interaction, IWebHostEnvironment environment,
+            ILogger<HomeController> logger)
         {
             _interaction = interaction;
             _environment = environment;
@@ -30,10 +31,8 @@ namespace IdentityServerHost.Quickstart.UI
         public IActionResult Index()
         {
             if (_environment.IsDevelopment())
-            {
                 // only show in development
                 return View();
-            }
 
             _logger.LogInformation("Homepage is disabled in production. Returning 404.");
             return NotFound();
@@ -53,10 +52,8 @@ namespace IdentityServerHost.Quickstart.UI
                 vm.Error = message;
 
                 if (!_environment.IsDevelopment())
-                {
                     // only show in development
                     message.ErrorDescription = null;
-                }
             }
 
             return View("Error", vm);

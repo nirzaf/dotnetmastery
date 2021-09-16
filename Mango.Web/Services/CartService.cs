@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Mango.Web.Services
 {
-    public class CartService : BaseService,ICartService
+    public class CartService : BaseService, ICartService
     {
         private readonly IHttpClientFactory _clientFactory;
 
@@ -16,9 +16,10 @@ namespace Mango.Web.Services
         {
             _clientFactory = clientFactory;
         }
+
         public async Task<T> AddToCartAsync<T>(CartDto cartDto, string token = null)
         {
-            return await this.SendAsync<T>(new ApiRequest()
+            return await SendAsync<T>(new ApiRequest()
             {
                 ApiType = SD.ApiType.POST,
                 Data = cartDto,
@@ -29,7 +30,7 @@ namespace Mango.Web.Services
 
         public async Task<T> ApplyCoupon<T>(CartDto cartDto, string token = null)
         {
-            return await this.SendAsync<T>(new ApiRequest()
+            return await SendAsync<T>(new ApiRequest()
             {
                 ApiType = SD.ApiType.POST,
                 Data = cartDto,
@@ -40,7 +41,7 @@ namespace Mango.Web.Services
 
         public async Task<T> Checkout<T>(CartHeaderDto cartHeader, string token = null)
         {
-            return await this.SendAsync<T>(new ApiRequest()
+            return await SendAsync<T>(new ApiRequest()
             {
                 ApiType = SD.ApiType.POST,
                 Data = cartHeader,
@@ -51,7 +52,7 @@ namespace Mango.Web.Services
 
         public async Task<T> GetCartByUserIdAsnyc<T>(string userId, string token = null)
         {
-            return await this.SendAsync<T>(new ApiRequest()
+            return await SendAsync<T>(new ApiRequest()
             {
                 ApiType = SD.ApiType.GET,
                 Url = SD.ShoppingCartAPIBase + "/api/cart/GetCart/" + userId,
@@ -61,7 +62,7 @@ namespace Mango.Web.Services
 
         public async Task<T> RemoveCoupon<T>(string userId, string token = null)
         {
-            return await this.SendAsync<T>(new ApiRequest()
+            return await SendAsync<T>(new ApiRequest()
             {
                 ApiType = SD.ApiType.POST,
                 Data = userId,
@@ -72,7 +73,7 @@ namespace Mango.Web.Services
 
         public async Task<T> RemoveFromCartAsync<T>(int cartId, string token = null)
         {
-            return await this.SendAsync<T>(new ApiRequest()
+            return await SendAsync<T>(new ApiRequest()
             {
                 ApiType = SD.ApiType.POST,
                 Data = cartId,
@@ -83,7 +84,7 @@ namespace Mango.Web.Services
 
         public async Task<T> UpdateCartAsync<T>(CartDto cartDto, string token = null)
         {
-            return await this.SendAsync<T>(new ApiRequest()
+            return await SendAsync<T>(new ApiRequest()
             {
                 ApiType = SD.ApiType.POST,
                 Data = cartDto,

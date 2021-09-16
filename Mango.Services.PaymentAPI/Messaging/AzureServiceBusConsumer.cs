@@ -12,7 +12,7 @@ using PaymentProcessor;
 using Mango.Services.PaymentAPI.Messages;
 
 namespace Mango.Services.PaymentAPI.Messaging
-{  
+{
     public class AzureServiceBusConsumer : IAzureServiceBusConsumer
     {
         private readonly string serviceBusConnectionString;
@@ -25,7 +25,8 @@ namespace Mango.Services.PaymentAPI.Messaging
         private readonly IConfiguration _configuration;
         private readonly IMessageBus _messageBus;
 
-        public AzureServiceBusConsumer(IProcessPayment processPayment, IConfiguration configuration, IMessageBus messageBus)
+        public AzureServiceBusConsumer(IProcessPayment processPayment, IConfiguration configuration,
+            IMessageBus messageBus)
         {
             _processPayment = processPayment;
             _configuration = configuration;
@@ -48,12 +49,14 @@ namespace Mango.Services.PaymentAPI.Messaging
             orderPaymentProcessor.ProcessErrorAsync += ErrorHandler;
             await orderPaymentProcessor.StartProcessingAsync();
         }
+
         public async Task Stop()
         {
             await orderPaymentProcessor.StopProcessingAsync();
             await orderPaymentProcessor.DisposeAsync();
         }
-        Task ErrorHandler(ProcessErrorEventArgs args)
+
+        private Task ErrorHandler(ProcessErrorEventArgs args)
         {
             Console.WriteLine(args.Exception.ToString());
             return Task.CompletedTask;
@@ -64,7 +67,7 @@ namespace Mango.Services.PaymentAPI.Messaging
             var message = args.Message;
             var body = Encoding.UTF8.GetString(message.Body);
 
-            PaymentRequestMessage paymentRequestMessage = JsonConvert.DeserializeObject<PaymentRequestMessage>(body);
+            var paymentRequestMessage = JsonConvert.DeserializeObject<PaymentRequestMessage>(body);
 
             var result = _processPayment.PaymentProcessor();
 
@@ -75,17 +78,16 @@ namespace Mango.Services.PaymentAPI.Messaging
                 Email = paymentRequestMessage.Email
             };
 
-            
+
             try
             {
                 await _messageBus.PublishMessage(updatePaymentResultMessage, orderupdatepaymentresulttopic);
                 await args.CompleteMessageAsync(args.Message);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 throw;
             }
-
         }
     }
 }
