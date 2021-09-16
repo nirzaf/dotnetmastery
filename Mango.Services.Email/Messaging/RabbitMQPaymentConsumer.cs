@@ -62,8 +62,9 @@ namespace Mango.Services.PaymentAPI.Messaging
             {
                 await _emailRepo.SendAndLogEmail(updatePaymentResultMessage);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
+                Console.WriteLine(ex.Message.ToString());
                 throw;
             }
         }

@@ -68,9 +68,10 @@ namespace Mango.Services.Email.Messaging
                 await _emailRepo.SendAndLogEmail(objMessage);
                 await args.CompleteMessageAsync(args.Message);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                throw;
+                Console.WriteLine(ex.Message.ToString());
+                throw ;
             }
         }
     }
