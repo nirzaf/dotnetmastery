@@ -3,6 +3,7 @@ using Mango.Services.Identity.DbContexts;
 using Mango.Services.Identity.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Mango.Services.Identity.Initializer
 {
@@ -20,7 +21,7 @@ namespace Mango.Services.Identity.Initializer
             _userManager = userManager;
         }
 
-        public void Initialize()
+        public async Task Initialize()
         {
             if (_roleManager.FindByNameAsync(SD.Admin).Result == null)
             {
@@ -32,14 +33,16 @@ namespace Mango.Services.Identity.Initializer
                 return;
             }
 
+            var adminMail = Faker.Internet.Email();
+
             var adminUser = new ApplicationUser()
             {
-                UserName = "admin1@gmail.com",
-                Email = "admin1@gmail.com",
+                UserName = adminMail,
+                Email = adminMail,
                 EmailConfirmed = true,
-                PhoneNumber = "111111111111",
-                FirstName = "Ben",
-                LastName = "Admin"
+                PhoneNumber = Faker.Phone.Number(),
+                FirstName = Faker.Name.First(),
+                LastName = Faker.Name.Last()
             };
 
             _userManager.CreateAsync(adminUser, "Admin123*").GetAwaiter().GetResult();
@@ -53,14 +56,16 @@ namespace Mango.Services.Identity.Initializer
                 new(JwtClaimTypes.Role, SD.Admin)
             }).Result;
 
+            var userEmail = Faker.Internet.Email();
+
             var customerUser = new ApplicationUser()
             {
-                UserName = "customer1@gmail.com",
-                Email = "customer1@gmail.com",
+                UserName = userEmail,
+                Email = userEmail,
                 EmailConfirmed = true,
-                PhoneNumber = "111111111111",
-                FirstName = "Ben",
-                LastName = "Cust"
+                PhoneNumber = Faker.Phone.Number(),
+                FirstName = Faker.Name.First(),
+                LastName = Faker.Name.Last()
             };
 
             _userManager.CreateAsync(customerUser, "Admin123*").GetAwaiter().GetResult();
@@ -73,6 +78,8 @@ namespace Mango.Services.Identity.Initializer
                 new(JwtClaimTypes.FamilyName, customerUser.LastName),
                 new(JwtClaimTypes.Role, SD.Customer)
             }).Result;
+
+            await Task.CompletedTask;
         }
     }
 }

@@ -1,7 +1,9 @@
-﻿namespace Mango.Services.Identity.Initializer
+﻿using System.Threading.Tasks;
+
+namespace Mango.Services.Identity.Initializer
 {
     public interface IDbInitializer
     {
-        public void Initialize();
+        public Task Initialize();
     }
 }
