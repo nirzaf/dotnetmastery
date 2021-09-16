@@ -30,7 +30,7 @@ namespace Mango.Services.Identity.Initializer
             }
             else
             {
-                return;
+                await Task.CompletedTask;
             }
 
             var adminMail = Faker.Internet.Email();
@@ -56,12 +56,12 @@ namespace Mango.Services.Identity.Initializer
                 new(JwtClaimTypes.Role, SD.Admin)
             }).Result;
 
-            var userEmail = Faker.Internet.Email();
+            var userMail = Faker.Internet.Email();
 
             var customerUser = new ApplicationUser()
             {
-                UserName = userEmail,
-                Email = userEmail,
+                UserName = userMail,
+                Email = userMail,
                 EmailConfirmed = true,
                 PhoneNumber = Faker.Phone.Number(),
                 FirstName = Faker.Name.First(),
@@ -78,8 +78,6 @@ namespace Mango.Services.Identity.Initializer
                 new(JwtClaimTypes.FamilyName, customerUser.LastName),
                 new(JwtClaimTypes.Role, SD.Customer)
             }).Result;
-
-            await Task.CompletedTask;
         }
     }
 }
