@@ -36,7 +36,7 @@ namespace Mango.Web.Controllers
             var accessToken = await HttpContext.GetTokenAsync("access_token");
             var response = await _cartService.ApplyCoupon<ResponseDto>(cartDto, accessToken);
 
-            if (response != null && response.IsSuccess) return RedirectToAction(nameof(CartIndex));
+            if (response is { IsSuccess: true }) return RedirectToAction(nameof(CartIndex));
             return View();
         }
 
@@ -48,7 +48,7 @@ namespace Mango.Web.Controllers
             var accessToken = await HttpContext.GetTokenAsync("access_token");
             var response = await _cartService.RemoveCoupon<ResponseDto>(cartDto.CartHeader.UserId, accessToken);
 
-            if (response != null && response.IsSuccess) return RedirectToAction(nameof(CartIndex));
+            if (response is { IsSuccess: true }) return RedirectToAction(nameof(CartIndex));
             return View();
         }
 
@@ -59,7 +59,7 @@ namespace Mango.Web.Controllers
             var response = await _cartService.RemoveFromCartAsync<ResponseDto>(cartDetailsId, accessToken);
 
 
-            if (response != null && response.IsSuccess) return RedirectToAction(nameof(CartIndex));
+            if (response is { IsSuccess: true }) return RedirectToAction(nameof(CartIndex));
             return View();
         }
 
