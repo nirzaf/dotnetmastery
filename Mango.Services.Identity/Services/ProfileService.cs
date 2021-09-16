@@ -4,8 +4,6 @@ using Duende.IdentityServer.Services;
 using IdentityModel;
 using Mango.Services.Identity.Models;
 using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -42,12 +40,12 @@ namespace Mango.Services.Identity.Services
             if (_userMgr.SupportsUserRole)
             {
                 var roles = await _userMgr.GetRolesAsync(user);
-                foreach (var rolename in roles)
+                foreach (var roleName in roles)
                 {
-                    claims.Add(new Claim(JwtClaimTypes.Role, rolename));
+                    claims.Add(new Claim(JwtClaimTypes.Role, roleName));
                     if (_roleMgr.SupportsRoleClaims)
                     {
-                        var role = await _roleMgr.FindByNameAsync(rolename);
+                        var role = await _roleMgr.FindByNameAsync(roleName);
                         if (role != null) claims.AddRange(await _roleMgr.GetClaimsAsync(role));
                     }
                 }

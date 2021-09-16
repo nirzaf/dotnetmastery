@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Mango.Services.ProductAPI.Controllers
@@ -13,8 +12,8 @@ namespace Mango.Services.ProductAPI.Controllers
     [Route("api/products")]
     public class ProductAPIController : ControllerBase
     {
-        protected ResponseDto _response;
-        private IProductRepository _productRepository;
+        private readonly ResponseDto _response;
+        private readonly IProductRepository _productRepository;
 
         public ProductAPIController(IProductRepository productRepository)
         {
