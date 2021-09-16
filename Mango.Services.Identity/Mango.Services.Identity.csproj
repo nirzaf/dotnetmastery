@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Duende.IdentityServer.AspNetIdentity" Version="5.1.1" />
+    <PackageReference Include="Duende.IdentityServer.AspNetIdentity" Version="5.2.2" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.0-preview.3.21201.13" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.0-preview.3.21201.13" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.0-preview.3.21201.13" />
