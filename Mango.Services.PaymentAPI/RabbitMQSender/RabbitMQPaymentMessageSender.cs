@@ -2,10 +2,7 @@
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Mango.Services.PaymentAPI.RabbitMQSender
 {
@@ -58,8 +55,9 @@ namespace Mango.Services.PaymentAPI.RabbitMQSender
                 };
                 _connection = factory.CreateConnection();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 //log exception
             }
         }

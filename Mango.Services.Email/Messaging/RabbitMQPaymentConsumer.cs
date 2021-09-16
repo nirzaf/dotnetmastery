@@ -27,8 +27,8 @@ namespace Mango.Services.PaymentAPI.Messaging
             var factory = new ConnectionFactory
             {
                 HostName = "localhost",
-                UserName = "guest",
-                Password = "guest"
+                UserName = "",
+                Password = ""
             };
 
             _connection = factory.CreateConnection();

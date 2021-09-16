@@ -1,9 +1,6 @@
 ﻿using Azure.Messaging.ServiceBus;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Mango.Services.Email.Repository;
@@ -11,7 +8,7 @@ using Newtonsoft.Json;
 using Mango.Services.Email.Messages;
 
 namespace Mango.Services.Email.Messaging
-{  
+{
     public class AzureServiceBusConsumer : IAzureServiceBusConsumer
     {
         private readonly string serviceBusConnectionString;

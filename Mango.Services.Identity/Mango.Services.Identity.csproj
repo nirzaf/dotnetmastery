@@ -10,8 +10,8 @@
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.0-preview.3.21201.13" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.0-preview.3.21201.13" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="6.0.0-preview.3.21201.13" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.100-rc.1.21458.32" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.100-rc.1.21458.32">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.0-preview.3.21201.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.0-preview.3.21201.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
