@@ -1,25 +1,24 @@
-﻿using Azure.Messaging.ServiceBus;
-using System;
+﻿using System;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
-using Mango.Services.Email.Repository;
-using Newtonsoft.Json;
+using Azure.Messaging.ServiceBus;
 using Mango.Services.Email.Messages;
+using Mango.Services.Email.Repository;
+using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 
 namespace Mango.Services.Email.Messaging
 {
     public class AzureServiceBusConsumer : IAzureServiceBusConsumer
     {
-        private readonly string serviceBusConnectionString;
-        private readonly string subscriptionEmail;
-        private readonly string orderUpdatePaymentResultTopic;
+        private readonly IConfiguration _configuration;
 
         private readonly EmailRepository _emailRepo;
+        private readonly string orderUpdatePaymentResultTopic;
+        private readonly string serviceBusConnectionString;
+        private readonly string subscriptionEmail;
 
         private ServiceBusProcessor orderUpdatePaymentStatusProcessor;
-
-        private readonly IConfiguration _configuration;
 
         public AzureServiceBusConsumer(EmailRepository emailRepo, IConfiguration configuration)
         {
@@ -70,7 +69,7 @@ namespace Mango.Services.Email.Messaging
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message.ToString());
+                Console.WriteLine(ex.Message);
                 throw;
             }
         }

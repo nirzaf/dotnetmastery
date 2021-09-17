@@ -1,29 +1,26 @@
-﻿using Azure.Messaging.ServiceBus;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System;
 using System.Text;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
+using Azure.Messaging.ServiceBus;
 using Mango.MessageBus;
-using PaymentProcessor;
 using Mango.Services.PaymentAPI.Messages;
+using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
+using PaymentProcessor;
 
 namespace Mango.Services.PaymentAPI.Messaging
 {
     public class AzureServiceBusConsumer : IAzureServiceBusConsumer
     {
-        private readonly string serviceBusConnectionString;
-        private readonly string subscriptionPayment;
-        private readonly string orderPaymentProcessTopic;
-        private readonly string orderupdatepaymentresulttopic;
-
-        private ServiceBusProcessor orderPaymentProcessor;
-        private readonly IProcessPayment _processPayment;
         private readonly IConfiguration _configuration;
         private readonly IMessageBus _messageBus;
+        private readonly IProcessPayment _processPayment;
+
+        private readonly ServiceBusProcessor orderPaymentProcessor;
+        private readonly string orderPaymentProcessTopic;
+        private readonly string orderupdatepaymentresulttopic;
+        private readonly string serviceBusConnectionString;
+        private readonly string subscriptionPayment;
 
         public AzureServiceBusConsumer(IProcessPayment processPayment, IConfiguration configuration,
             IMessageBus messageBus)
@@ -56,7 +53,7 @@ namespace Mango.Services.PaymentAPI.Messaging
             await orderPaymentProcessor.DisposeAsync();
         }
 
-        private Task ErrorHandler(ProcessErrorEventArgs args)
+        private static Task ErrorHandler(ProcessErrorEventArgs args)
         {
             Console.WriteLine(args.Exception.ToString());
             return Task.CompletedTask;
@@ -66,27 +63,32 @@ namespace Mango.Services.PaymentAPI.Messaging
         {
             var message = args.Message;
             var body = Encoding.UTF8.GetString(message.Body);
-
             var paymentRequestMessage = JsonConvert.DeserializeObject<PaymentRequestMessage>(body);
-
             var result = _processPayment.PaymentProcessor();
 
-            UpdatePaymentResultMessage updatePaymentResultMessage = new()
+            if (paymentRequestMessage != null)
             {
-                Status = result,
-                OrderId = paymentRequestMessage.OrderId,
-                Email = paymentRequestMessage.Email
-            };
+                UpdatePaymentResultMessage updatePaymentResultMessage = new()
+                {
+                    Status = result,
+                    OrderId = paymentRequestMessage.OrderId,
+                    Email = paymentRequestMessage.Email
+                };
 
 
-            try
-            {
-                await _messageBus.PublishMessage(updatePaymentResultMessage, orderupdatepaymentresulttopic);
-                await args.CompleteMessageAsync(args.Message);
-            }
-            catch (Exception e)
-            {
-                throw;
+                try
+                {
+                    await _messageBus.PublishMessage(updatePaymentResultMessage, orderupdatepaymentresulttopic);
+                    await args.CompleteMessageAsync(args.Message);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+                finally
+                {
+                    await Task.CompletedTask;
+                }
             }
         }
     }

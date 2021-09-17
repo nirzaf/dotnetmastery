@@ -1,11 +1,8 @@
-﻿using Azure.Messaging.ServiceBus;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
+﻿using System;
 using System.Text;
 using System.Threading.Tasks;
+using Azure.Messaging.ServiceBus;
+using Newtonsoft.Json;
 
 namespace Mango.MessageBus
 {
@@ -19,10 +16,11 @@ namespace Mango.MessageBus
         {
             await using var client = new ServiceBusClient(connectionString);
 
-            var sender = client.CreateSender(topicName);
+            ServiceBusSender sender = client.CreateSender(topicName);
 
             var jsonMessage = JsonConvert.SerializeObject(message);
-            var finalMessage = new ServiceBusMessage(Encoding.UTF8.GetBytes(jsonMessage))
+
+            ServiceBusMessage finalMessage = new(Encoding.UTF8.GetBytes(jsonMessage))
             {
                 CorrelationId = Guid.NewGuid().ToString()
             };
