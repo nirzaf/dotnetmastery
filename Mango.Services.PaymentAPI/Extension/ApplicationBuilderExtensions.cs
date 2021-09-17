@@ -1,12 +1,8 @@
-﻿using Microsoft.AspNetCore.Builder;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
+﻿using System;
+using Mango.Services.PaymentAPI.Messaging;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Mango.Services.PaymentAPI.Messaging;
 
 namespace Mango.Services.PaymentAPI.Extension
 {
@@ -16,12 +12,19 @@ namespace Mango.Services.PaymentAPI.Extension
 
         public static IApplicationBuilder UseAzureServiceBusConsumer(this IApplicationBuilder app)
         {
-            ServiceBusConsumer = app.ApplicationServices.GetService<IAzureServiceBusConsumer>();
-            var hostApplicationLife = app.ApplicationServices.GetService<IHostApplicationLifetime>();
-
-            hostApplicationLife.ApplicationStarted.Register(OnStart);
-            hostApplicationLife.ApplicationStopped.Register(OnStop);
-            return app;
+            try
+            {
+                ServiceBusConsumer = app.ApplicationServices.GetService<IAzureServiceBusConsumer>();
+                var hostApplicationLife = app.ApplicationServices.GetService<IHostApplicationLifetime>();
+                hostApplicationLife.ApplicationStarted.Register(OnStart);
+                hostApplicationLife.ApplicationStopped.Register(OnStop);
+                return app;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                throw;
+            }
         }
 
         private static void OnStart()

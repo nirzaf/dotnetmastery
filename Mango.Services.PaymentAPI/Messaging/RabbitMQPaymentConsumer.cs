@@ -14,8 +14,8 @@ namespace Mango.Services.PaymentAPI.Messaging
 {
     public class RabbitMQPaymentConsumer : BackgroundService
     {
-        private IConnection _connection;
-        private IModel _channel;
+        private readonly IConnection _connection;
+        private readonly IModel _channel;
         private readonly IRabbitMQPaymentMessageSender _rabbitMQPaymentMessageSender;
         private readonly IProcessPayment _processPayment;
 
