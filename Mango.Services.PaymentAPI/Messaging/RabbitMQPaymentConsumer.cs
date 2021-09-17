@@ -1,23 +1,23 @@
-﻿using Mango.Services.PaymentAPI.Messages;
+﻿using System;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
+using Mango.Services.PaymentAPI.Messages;
 using Mango.Services.PaymentAPI.RabbitMQSender;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using PaymentProcessor;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-using System;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Mango.Services.PaymentAPI.Messaging
 {
     public class RabbitMQPaymentConsumer : BackgroundService
     {
-        private readonly IConnection _connection;
         private readonly IModel _channel;
-        private readonly IRabbitMQPaymentMessageSender _rabbitMQPaymentMessageSender;
+        private readonly IConnection _connection;
         private readonly IProcessPayment _processPayment;
+        private readonly IRabbitMQPaymentMessageSender _rabbitMQPaymentMessageSender;
 
         public RabbitMQPaymentConsumer(IRabbitMQPaymentMessageSender rabbitMQPaymentMessageSender,
             IProcessPayment processPayment)
