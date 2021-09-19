@@ -1,10 +1,7 @@
 ﻿using Azure.Messaging.ServiceBus;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Mango.MessageBus;
@@ -12,7 +9,7 @@ using PaymentProcessor;
 using Mango.Services.PaymentAPI.Messages;
 
 namespace Mango.Services.PaymentAPI.Messaging
-{  
+{
     public class AzureServiceBusConsumer : IAzureServiceBusConsumer
     {
         private readonly string serviceBusConnectionString;
@@ -48,11 +45,13 @@ namespace Mango.Services.PaymentAPI.Messaging
             orderPaymentProcessor.ProcessErrorAsync += ErrorHandler;
             await orderPaymentProcessor.StartProcessingAsync();
         }
+
         public async Task Stop()
         {
             await orderPaymentProcessor.StopProcessingAsync();
             await orderPaymentProcessor.DisposeAsync();
         }
+
         Task ErrorHandler(ProcessErrorEventArgs args)
         {
             Console.WriteLine(args.Exception.ToString());
@@ -83,6 +82,7 @@ namespace Mango.Services.PaymentAPI.Messaging
             }
             catch(Exception e)
             {
+                Console.WriteLine(e.ToString());
                 throw;
             }
 
