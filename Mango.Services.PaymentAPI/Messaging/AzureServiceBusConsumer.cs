@@ -16,7 +16,6 @@ namespace Mango.Services.PaymentAPI.Messaging
         private readonly string subscriptionPayment;
         private readonly string orderPaymentProcessTopic;
         private readonly string orderupdatepaymentresulttopic;
-
         private ServiceBusProcessor orderPaymentProcessor;
         private readonly IProcessPayment _processPayment;
         private readonly IConfiguration _configuration;
@@ -27,15 +26,11 @@ namespace Mango.Services.PaymentAPI.Messaging
             _processPayment = processPayment;
             _configuration = configuration;
             _messageBus = messageBus;
-
             serviceBusConnectionString = _configuration.GetValue<string>("ServiceBusConnectionString");
             subscriptionPayment = _configuration.GetValue<string>("OrderPaymentProcessSubscription");
             orderupdatepaymentresulttopic = _configuration.GetValue<string>("OrderUpdatePaymentResultTopic");
             orderPaymentProcessTopic = _configuration.GetValue<string>("OrderPaymentProcessTopics");
-
-
             var client = new ServiceBusClient(serviceBusConnectionString);
-
             orderPaymentProcessor = client.CreateProcessor(orderPaymentProcessTopic, subscriptionPayment);
         }
 
